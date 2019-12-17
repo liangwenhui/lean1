@@ -1,0 +1,92 @@
+﻿1.创建文件夹
+$ mkdir xxxx
+
+2.将文件夹初始化为git可以管理的仓库
+$ git init
+
+3.将文件添加到仓库
+$ git add fileName
+
+4.将文件提交到仓库
+$ git commot -m "msg"
+
+5.查看历史记录
+$ git log 
+如果嫌输出信息太多，看得眼花缭乱的，可以试试加上--pretty=oneline参数
+$ git log --pretty=oneline
+
+6.回退版本
+$ git reset --hard HEAD^
+HEAD^表示上版本，^^表示上上版本，往上很多版本，比如100版本，可以写作HEAD~100
+$ git reset --hard 1094a 可以将到指定版本
+
+7.操作日志
+$ git reflog
+
+8.撤销操作
+	撤销工作区修改，此操作用于未add的文件 -- 表示撤销文件，如果没有 -- checkout命令则是切换分支
+$ git checkout -- filename 
+
+ 文件add了之后，想撤销，则需要执行命令 将暂存区状态恢复到上一次commit
+$ git reset HEAD 
+$ git checkout -- filename
+
+9.删除文件
+$ rm file 删除工作区文件
+$ git rm file 删除文件 
+
+10.本地以及创建仓库，关联远程创库
+$ git remote add origin git@github.com:michaelliao/learngit.git
+$ git push -u origin master
+
+删除远程仓库关联
+$ git remote rm origin
+只要本地仓库commit了，就能使用git push 来推送到远程库
+
+   11.查看当前关联远程库信息
+$ git remote -v
+
+
+12.查看所有分支
+$ git branch -al
+
+13.从分支拉去文件
+$ git pull origin master
+
+14.创建切换分支
+$ git checkout -b dev 或者 git switch -c dev 
+checkout 加 -b 表示创建切换，相当于2条命令 
+$ git branch dev
+$ git checkout dev
+
+15.合并分支
+切换到需要合并的分支 ，将Dev1分支合并到当前分支
+$ git merge dev1 
+
+合并分支时，加上--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。
+$ git merge --no-ff -m "merge with no-ff" dev
+
+如果合并冲突，需要解决冲突，解决后提交
+git log --graph --pretty=oneline --abbrev-commit
+通过命令可查看合并日志
+
+删除分支
+$ git branch -d dev1
+
+16.如果dev分支上有文件修改，但不想提交。注意：切换分支会自动将当前分支修改带到另一个分支
+需要使用冻结功能 stash
+
+$ git stash
+使用命令查看冻结列表
+$ git stash list
+
+恢复冻结
+一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；
+另一种方式是用git stash pop，恢复的同时把stash内容也删了
+
+指定恢复
+$ git stash apply stash@{0}
+
+17.单独复制commit操作
+同样的bug，要在dev上修复，我们只需要把4c805e2 fix bug 101这个提交所做的修改“复制”到dev分支。注意：我们只想复制4c805e2 fix bug 101这个提交所做的修改，并不是把整个master分支merge过来。
+为了方便操作，Git专门提供了一个cherry-pick命令，让我们能复制一个特定的提交到当前分支：
